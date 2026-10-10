@@ -1,8 +1,3 @@
-/* ---------------------------
-   Premium Portfolio Script
---------------------------- */
-
-// GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 // Helpers
@@ -30,7 +25,7 @@ const typingEl = $("#typingText");
 const roles = [
   "Engineering Student",
   "Web Developer",
-  "Learner"
+  "Learner",
 ];
 
 let roleIndex = 0;
@@ -57,15 +52,18 @@ function typingLoop() {
 
   setTimeout(typingLoop, deleting ? 45 : 80);
 }
+
 typingLoop();
 
 /* --------------------------------
    Scroll progress
 -------------------------------- */
 const scrollProgress = $("#scrollProgress");
-window.addEventListener("scroll", () => {
+
+globalThis.addEventListener("scroll", () => {
   const h = document.documentElement;
-  const scrolled = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  const scrolled =
+    (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
   scrollProgress.style.width = scrolled + "%";
 });
 
@@ -73,12 +71,14 @@ window.addEventListener("scroll", () => {
    Back to top
 -------------------------------- */
 const topBtn = $("#topBtn");
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 500) topBtn.classList.add("show");
+
+globalThis.addEventListener("scroll", () => {
+  if (globalThis.scrollY > 500) topBtn.classList.add("show");
   else topBtn.classList.remove("show");
 });
+
 topBtn.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  globalThis.scrollTo({ top: 0, behavior: "smooth" });
 });
 
 /* --------------------------------
@@ -101,12 +101,12 @@ $$('a[href^="#"]').forEach((link) => {
 const cursorDot = $("#cursorDot");
 const cursorRing = $("#cursorRing");
 
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
+let mouseX = globalThis.innerWidth / 2;
+let mouseY = globalThis.innerHeight / 2;
 let ringX = mouseX;
 let ringY = mouseY;
 
-window.addEventListener("mousemove", (e) => {
+globalThis.addEventListener("mousemove", (e) => {
   mouseX = e.clientX;
   mouseY = e.clientY;
   cursorDot.style.left = mouseX + "px";
@@ -120,16 +120,19 @@ function animateRing() {
   cursorRing.style.top = ringY + "px";
   requestAnimationFrame(animateRing);
 }
+
 animateRing();
 
 // Cursor hover state
 const hoverables = $$("a, button, .tilt");
+
 hoverables.forEach((el) => {
   el.addEventListener("mouseenter", () => {
     cursorRing.style.width = "52px";
     cursorRing.style.height = "52px";
     cursorRing.style.borderColor = "rgba(123, 97, 255, 0.95)";
   });
+
   el.addEventListener("mouseleave", () => {
     cursorRing.style.width = "34px";
     cursorRing.style.height = "34px";
@@ -147,22 +150,24 @@ hoverables.forEach((el) => {
 
   const camera = new THREE.PerspectiveCamera(
     60,
-    window.innerWidth / window.innerHeight,
+    globalThis.innerWidth / globalThis.innerHeight,
     0.1,
-    1000
+    1000,
   );
+
   camera.position.z = 45;
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: true,
-    alpha: true
+    alpha: true,
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
-  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  renderer.setPixelRatio(Math.min(globalThis.devicePixelRatio, 1.8));
+  renderer.setSize(globalThis.innerWidth, globalThis.innerHeight);
 
   // Particle sphere
-  const particlesCount = window.innerWidth < 768 ? 900 : 1800;
+  const particlesCount = globalThis.innerWidth < 768 ? 900 : 1800;
   const geometry = new THREE.BufferGeometry();
   const positions = new Float32Array(particlesCount * 3);
 
@@ -177,13 +182,16 @@ hoverables.forEach((el) => {
     positions[i3 + 2] = radius * Math.cos(phi);
   }
 
-  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(positions, 3),
+  );
 
   const material = new THREE.PointsMaterial({
     size: 0.12,
     color: 0x7dd3fc,
     transparent: true,
-    opacity: 0.9
+    opacity: 0.9,
   });
 
   const points = new THREE.Points(geometry, material);
@@ -196,17 +204,20 @@ hoverables.forEach((el) => {
       color: 0x7b61ff,
       wireframe: true,
       transparent: true,
-      opacity: 0.18
-    })
+      opacity: 0.18,
+    }),
   );
+
   scene.add(sphere);
 
   let targetRotX = 0;
   let targetRotY = 0;
 
-  window.addEventListener("mousemove", (e) => {
-    targetRotY = (e.clientX / window.innerWidth - 0.5) * 0.35;
-    targetRotX = (e.clientY / window.innerHeight - 0.5) * 0.2;
+  globalThis.addEventListener("mousemove", (e) => {
+    targetRotY =
+      (e.clientX / globalThis.innerWidth - 0.5) * 0.35;
+    targetRotX =
+      (e.clientY / globalThis.innerHeight - 0.5) * 0.2;
   });
 
   function animate() {
@@ -222,12 +233,13 @@ hoverables.forEach((el) => {
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   }
+
   animate();
 
-  window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
+  globalThis.addEventListener("resize", () => {
+    camera.aspect = globalThis.innerWidth / globalThis.innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(globalThis.innerWidth, globalThis.innerHeight);
   });
 })();
 
@@ -241,11 +253,14 @@ $$(".tilt").forEach((card) => {
     const y = e.clientY - rect.top;
     const rotateX = ((y / rect.height) - 0.5) * -10;
     const rotateY = ((x / rect.width) - 0.5) * 10;
-    card.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+    card.style.transform =
+      `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   });
 
   card.addEventListener("mouseleave", () => {
-    card.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg)";
+    card.style.transform =
+      "perspective(900px) rotateX(0deg) rotateY(0deg)";
   });
 });
 
@@ -257,7 +272,7 @@ gsap.from(".hero-content > *", {
   opacity: 0,
   duration: 0.9,
   ease: "power3.out",
-  stagger: 0.12
+  stagger: 0.12,
 });
 
 $$(".reveal").forEach((el) => {
@@ -265,32 +280,34 @@ $$(".reveal").forEach((el) => {
     scrollTrigger: {
       trigger: el,
       start: "top 84%",
-      toggleActions: "play none none reverse"
+      toggleActions: "play none none reverse",
     },
     y: 0,
     opacity: 1,
     duration: 0.9,
-    ease: "power3.out"
+    ease: "power3.out",
   });
 });
 
 // Skill bars animate on view
 $$(".bar span").forEach((bar) => {
   const finalWidth = bar.dataset.width || "70%";
+
   gsap.to(bar, {
     width: finalWidth,
     duration: 1.2,
     ease: "power2.out",
     scrollTrigger: {
       trigger: bar,
-      start: "top 90%"
-    }
+      start: "top 90%",
+    },
   });
 });
 
 // Counter animation
 $$(".counter").forEach((counter) => {
   const target = parseInt(counter.dataset.target || "0", 10);
+
   gsap.fromTo(
     counter,
     { innerText: 0 },
@@ -301,9 +318,9 @@ $$(".counter").forEach((counter) => {
       snap: { innerText: 1 },
       scrollTrigger: {
         trigger: counter,
-        start: "top 90%"
-      }
-    }
+        start: "top 90%",
+      },
+    },
   );
 });
 
@@ -330,6 +347,7 @@ function playSound(audioEl, volume = 0.18) {
 $$(".sfx-hover").forEach((el) => {
   el.addEventListener("mouseenter", () => playSound(hoverSound, 0.12));
 });
+
 $$(".sfx-click").forEach((el) => {
   el.addEventListener("click", () => playSound(clickSound, 0.18));
 });
