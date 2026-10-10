@@ -1,11 +1,23 @@
 import { useEffect, useState } from 'react';
-import { ArrowDown, Download, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
+import {
+  ArrowDown,
+  Download,
+  Github,
+  Linkedin,
+  Mail,
+  Sparkles,
+} from 'lucide-react';
 import { heroRoles, heroStats, profile } from '@/content';
 import { MagneticButton } from './MagneticButton';
 import { Reveal } from './Reveal';
 import { ResumeModal } from './ResumeModal';
 
-function useTyping(words: string[], typeSpeed = 90, deleteSpeed = 45, pause = 1600) {
+function useTyping(
+  words: string[],
+  typeSpeed = 90,
+  deleteSpeed = 45,
+  pause = 1600,
+) {
   const [text, setText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
@@ -15,47 +27,61 @@ function useTyping(words: string[], typeSpeed = 90, deleteSpeed = 45, pause = 16
     let timeout: number;
 
     if (!deleting && text === current) {
-      timeout = window.setTimeout(() => setDeleting(true), pause);
+      timeout = globalThis.setTimeout(() => setDeleting(true), pause);
     } else if (deleting && text === '') {
       setDeleting(false);
       setWordIndex((i) => i + 1);
     } else {
-      timeout = window.setTimeout(
+      timeout = globalThis.setTimeout(
         () => {
           setText((prev) =>
             deleting
               ? current.slice(0, prev.length - 1)
-              : current.slice(0, prev.length + 1)
+              : current.slice(0, prev.length + 1),
           );
         },
-        deleting ? deleteSpeed : typeSpeed
+        deleting ? deleteSpeed : typeSpeed,
       );
     }
+
     return () => clearTimeout(timeout);
   }, [text, deleting, wordIndex, words, typeSpeed, deleteSpeed, pause]);
 
   return text;
 }
 
-function AnimatedStat({ stat, delay }: { stat: { label: string; value: number; suffix: string }; delay: number }) {
+function AnimatedStat({
+  stat,
+  delay,
+}: {
+  stat: { label: string; value: number; suffix: string };
+  delay: number;
+}) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let raf: number;
     const start = performance.now() + delay;
     const duration = 1500;
+
     const tick = (now: number) => {
       const elapsed = now - start;
+
       if (elapsed < 0) {
         raf = requestAnimationFrame(tick);
         return;
       }
+
       const pct = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - pct, 3);
+
       setCount(Math.round(stat.value * eased));
+
       if (pct < 1) raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
+
     return () => cancelAnimationFrame(raf);
   }, [stat.value, delay]);
 
@@ -65,7 +91,10 @@ function AnimatedStat({ stat, delay }: { stat: { label: string; value: number; s
         {count}
         <span className="text-gradient-sky">{stat.suffix}</span>
       </div>
-      <div className="mt-1 text-xs font-medium uppercase tracking-wide2" style={{ color: 'var(--muted)' }}>
+      <div
+        className="mt-1 text-xs font-medium uppercase tracking-wide2"
+        style={{ color: 'var(--muted)' }}
+      >
         {stat.label}
       </div>
     </div>
@@ -77,11 +106,17 @@ export function Hero() {
   const [resumeOpen, setResumeOpen] = useState(false);
 
   return (
-    <section id="hero" className="relative flex min-h-screen items-center overflow-hidden pt-16">
+    <section
+      id="hero"
+      className="relative flex min-h-screen items-center overflow-hidden pt-16"
+    >
       <div className="absolute inset-0 bg-grid opacity-50 mask-fade-b" />
       <div
         className="absolute -top-1/4 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full opacity-20 blur-3xl"
-        style={{ background: 'radial-gradient(circle, rgba(0,184,255,0.3), transparent 70%)' }}
+        style={{
+          background:
+            'radial-gradient(circle, rgba(0,184,255,0.3), transparent 70%)',
+        }}
       />
 
       <div className="container-px-wide relative w-full">
@@ -109,14 +144,20 @@ export function Hero() {
               <div className="mt-4 flex items-center gap-2 font-mono text-sm sm:text-base">
                 <span style={{ color: 'var(--muted)' }}>&gt;</span>
                 <span style={{ color: 'var(--text)' }}>{typed}</span>
-                <span className="animate-blink" style={{ color: '#00B8FF' }}>▋</span>
+                <span className="animate-blink" style={{ color: '#00B8FF' }}>
+                  ▋
+                </span>
               </div>
             </Reveal>
 
             <Reveal delay={240}>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-pretty sm:text-lg" style={{ color: 'var(--muted)' }}>
-                {profile.tagline} I design schemas, build APIs, and craft responsive frontends —
-                focused on clean architecture and shipping features that solve real problems.
+              <p
+                className="mt-6 max-w-xl text-base leading-relaxed text-pretty sm:text-lg"
+                style={{ color: 'var(--muted)' }}
+              >
+                {profile.tagline} I design schemas, build APIs, and craft
+                responsive frontends — focused on clean architecture and
+                shipping features that solve real problems.
               </p>
             </Reveal>
 
@@ -126,17 +167,40 @@ export function Hero() {
                   <Sparkles size={16} />
                   Hire Me
                 </MagneticButton>
-                <button onClick={() => setResumeOpen(true)} className="btn-primary">
+
+                <button
+                  onClick={() => setResumeOpen(true)}
+                  className="btn-primary"
+                >
                   <Download size={16} />
                   Resume
                 </button>
-                <a href={profile.github} target="_blank" rel="noopener noreferrer" className="btn-ghost" aria-label="GitHub">
+
+                <a
+                  href={profile.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost"
+                  aria-label="GitHub"
+                >
                   <Github size={18} />
                 </a>
-                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" className="btn-ghost" aria-label="LinkedIn">
+
+                <a
+                  href={profile.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-ghost"
+                  aria-label="LinkedIn"
+                >
                   <Linkedin size={18} />
                 </a>
-                <a href={`mailto:${profile.email}`} className="btn-ghost" aria-label="Email">
+
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="btn-ghost"
+                  aria-label="Email"
+                >
                   <Mail size={18} />
                 </a>
               </div>
@@ -145,7 +209,11 @@ export function Hero() {
             <Reveal delay={400}>
               <div className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4">
                 {heroStats.map((stat, i) => (
-                  <AnimatedStat key={stat.label} stat={stat} delay={i * 150} />
+                  <AnimatedStat
+                    key={stat.label}
+                    stat={stat}
+                    delay={i * 150}
+                  />
                 ))}
               </div>
             </Reveal>
@@ -156,7 +224,10 @@ export function Hero() {
               <div className="relative">
                 <div
                   className="absolute -inset-4 animate-spin-slow rounded-full opacity-30 blur-2xl"
-                  style={{ background: 'conic-gradient(from 0deg, #D4AF37, #00B8FF, #D4AF37)' }}
+                  style={{
+                    background:
+                      'conic-gradient(from 0deg, #D4AF37, #00B8FF, #D4AF37)',
+                  }}
                 />
                 <div
                   className="relative flex h-72 w-72 items-center justify-center rounded-full"
@@ -187,7 +258,10 @@ export function Hero() {
         </Reveal>
       </div>
 
-      <ResumeModal open={resumeOpen} onClose={() => setResumeOpen(false)} />
+      <ResumeModal
+        open={resumeOpen}
+        onClose={() => setResumeOpen(false)}
+      />
     </section>
   );
 }
