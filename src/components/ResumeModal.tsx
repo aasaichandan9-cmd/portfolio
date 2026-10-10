@@ -12,8 +12,10 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 
   useEffect(() => {
     if (!open) return;
+
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
+
+    globalThis.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
 
     fetch(profile.resumePath, { method: 'HEAD' })
@@ -21,7 +23,7 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
       .catch(() => setExists(false));
 
     return () => {
-      window.removeEventListener('keydown', onKey);
+      globalThis.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
   }, [open, onClose]);
@@ -30,7 +32,10 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
 
   return (
     <div className="fixed inset-0 z-[95] flex items-center justify-center px-4">
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        onClick={onClose}
+      />
       <div
         className="glass-strong relative w-full max-w-md rounded-2xl p-6"
         style={{ boxShadow: 'var(--shadow-lift)' }}
@@ -50,7 +55,10 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
         <div className="flex items-center gap-3">
           <div
             className="flex h-12 w-12 items-center justify-center rounded-xl"
-            style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
+            style={{
+              background: 'var(--surface)',
+              border: '1px solid var(--border)',
+            }}
           >
             <FileText size={20} style={{ color: '#D4AF37' }} />
           </div>
@@ -65,27 +73,65 @@ export function ResumeModal({ open, onClose }: ResumeModalProps) {
           </p>
         ) : exists ? (
           <>
-            <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+            <p
+              className="mt-4 text-sm leading-relaxed"
+              style={{ color: 'var(--muted)' }}
+            >
               My resume is available as a PDF. Click below to download it.
             </p>
-            <a href={profile.resumePath} download className="btn-gold mt-5 w-full">
+            <a
+              href={profile.resumePath}
+              download
+              className="btn-gold mt-5 w-full"
+            >
               <Download size={16} /> Download PDF
             </a>
           </>
         ) : (
           <>
-            <div className="mt-4 flex items-start gap-2 rounded-lg p-3" style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}>
-              <AlertCircle size={16} className="mt-0.5 shrink-0" style={{ color: '#D4AF37' }} />
-              <p className="text-sm leading-relaxed" style={{ color: 'var(--muted)' }}>
+            <div
+              className="mt-4 flex items-start gap-2 rounded-lg p-3"
+              style={{
+                background: 'var(--surface)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              <AlertCircle
+                size={16}
+                className="mt-0.5 shrink-0"
+                style={{ color: '#D4AF37' }}
+              />
+              <p
+                className="text-sm leading-relaxed"
+                style={{ color: 'var(--muted)' }}
+              >
                 Resume file not found. To add it, place a file named{' '}
-                <code className="rounded px-1 py-0.5 text-xs" style={{ background: 'var(--surface-2)' }}>resume.pdf</code>{' '}
-                in the <code className="rounded px-1 py-0.5 text-xs" style={{ background: 'var(--surface-2)' }}>public/</code>{' '}
+                <code
+                  className="rounded px-1 py-0.5 text-xs"
+                  style={{ background: 'var(--surface-2)' }}
+                >
+                  resume.pdf
+                </code>{' '}
+                in the{' '}
+                <code
+                  className="rounded px-1 py-0.5 text-xs"
+                  style={{ background: 'var(--surface-2)' }}
+                >
+                  public/
+                </code>{' '}
                 folder of the project.
               </p>
             </div>
-            <p className="mt-4 text-sm" style={{ color: 'var(--muted)' }}>
+            <p
+              className="mt-4 text-sm"
+              style={{ color: 'var(--muted)' }}
+            >
               You can also reach me directly at{' '}
-              <a href={`mailto:${profile.email}`} className="link-underline font-medium" style={{ color: 'var(--text)' }}>
+              <a
+                href={`mailto:${profile.email}`}
+                className="link-underline font-medium"
+                style={{ color: 'var(--text)' }}
+              >
                 {profile.email}
               </a>{' '}
               to request it.
